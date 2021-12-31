@@ -25,6 +25,9 @@
     "package.json",
     "package-lock.json"
   ],
+  "release": {
+    "branches": ["main", "next"]
+  },
   "devDependencies": {
     "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",

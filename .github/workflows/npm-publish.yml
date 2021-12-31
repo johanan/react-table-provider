@@ -33,7 +33,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npx semantic-release@17
-      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
           GH_TOKEN: ${{secrets.GH_TOKEN}}
