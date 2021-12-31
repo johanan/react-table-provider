@@ -95,13 +95,9 @@ export const ReactTableProvider = <D extends Record<string, unknown>>({
 };
 
 export const useReactTableContext = () => {
-
     const context = React.useContext<TableInstance<RecordUnknown> | undefined>(ReactTableContext);
     if (!context) {
-
         throw new Error("useReactTableContext must be used under ReactTableContext");
-
     }
     return context;
-
 };
