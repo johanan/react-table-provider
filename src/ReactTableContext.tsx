@@ -19,23 +19,15 @@ import {
     TableInstance,
     TableState,
     ColumnInterface,
-    TableOptions
+    TableOptions,
+    Column
 } from "react-table";
+import { ReactTableInstance, ReactTableOptions, ReactTableState } from "./types";
 
-type RecordUnknown = Record<string, unknown>;
-const ReactTableContext = React.createContext<TableInstance<RecordUnknown> | undefined>(undefined);
+const ReactTableContext = React.createContext<ReactTableInstance<object> | undefined>(undefined);
 
-interface ReactTableProviderProps<D extends Record<string, unknown>> {
-  columns: ColumnInterface<D>[];
-  data: D[];
-  initialState?: Partial<TableState<D>>;
-  stateReducer?: (
-    newState: TableState<D>,
-    action: ActionType,
-    prevState: TableState<D>
-  ) => TableState<D>;
-  useControlledState?: (state: TableState<D>) => TableState<D>;
-  options?: Omit<TableOptions<D>, "data" | "columnns">;
+interface ReactTableProviderProps<D extends object> extends ReactTableOptions<D>{
+  initialState?: Partial<ReactTableState<D>>;
   includeResizeColumns?: boolean;
   includeBlockLayout?: boolean;
   includeFlexLayout?: boolean;
@@ -43,18 +35,18 @@ interface ReactTableProviderProps<D extends Record<string, unknown>> {
   children: React.ReactNode;
 }
 
-export const ReactTableProvider = <D extends Record<string, unknown>>({
+export const ReactTableProvider = <D extends object>({
     columns,
     data,
     initialState = {},
-    options = {},
     stateReducer,
     useControlledState,
     includeResizeColumns = false,
     includeBlockLayout = false,
     includeFlexLayout = false,
     includeAbsoluteLayout = false,
-    children
+    children,
+    ...options
 }: ReactTableProviderProps<D>) => {
 
     const table = useTable<D>(
@@ -62,6 +54,7 @@ export const ReactTableProvider = <D extends Record<string, unknown>>({
             // @ts-ignore
             columns,
             data,
+            //@ts-ignore
             initialState,
             // @ts-ignore
             stateReducer,
@@ -95,7 +88,7 @@ export const ReactTableProvider = <D extends Record<string, unknown>>({
 };
 
 export const useReactTableContext = () => {
-    const context = React.useContext<TableInstance<RecordUnknown> | undefined>(ReactTableContext);
+    const context = React.useContext<ReactTableInstance<object> | undefined>(ReactTableContext);
     if (!context) {
         throw new Error("useReactTableContext must be used under ReactTableContext");
     }
