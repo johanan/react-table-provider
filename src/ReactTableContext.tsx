@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from "react";
 import {
-    ActionType,
     useAbsoluteLayout,
     useBlockLayout,
     useColumnOrder,
@@ -15,13 +14,7 @@ import {
     useRowSelect,
     useRowState,
     useSortBy,
-    useTable,
-    TableInstance,
-    TableState,
-    ColumnInterface,
-    TableOptions,
-    Column
-} from "react-table";
+    useTable} from "react-table";
 import { ReactTableInstance, ReactTableOptions, ReactTableState } from "./types";
 
 const ReactTableContext = React.createContext<ReactTableInstance<object> | undefined>(undefined);
