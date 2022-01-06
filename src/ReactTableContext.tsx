@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from "react";
 import {
+    useAsyncDebounce,
     useAbsoluteLayout,
     useBlockLayout,
     useColumnOrder,
@@ -25,6 +27,7 @@ interface ReactTableProviderProps<D extends object> extends ReactTableOptions<D>
   includeBlockLayout?: boolean;
   includeFlexLayout?: boolean;
   includeAbsoluteLayout?: boolean;
+  onStateChange?: (state: ReactTableState<D>) => void
   children: React.ReactNode;
 }
 
@@ -38,6 +41,7 @@ export const ReactTableProvider = <D extends object>({
     includeBlockLayout = false,
     includeFlexLayout = false,
     includeAbsoluteLayout = false,
+    onStateChange = () => {},
     children,
     ...options
 }: ReactTableProviderProps<D>) => {
@@ -70,6 +74,12 @@ export const ReactTableProvider = <D extends object>({
         includeFlexLayout && useFlexLayout,
         includeResizeColumns && useResizeColumns
     );
+
+    const onStateChangeDebounced = useAsyncDebounce(onStateChange, 0)
+    React.useEffect(() => {
+        //@ts-ignore
+        onStateChangeDebounced(table.state);
+    }, [table.state, onStateChangeDebounced])
 
     return (
     // @ts-ignore

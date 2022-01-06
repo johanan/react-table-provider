@@ -8,6 +8,7 @@
       ],
     "moduleNameMapper": {
         "react-table-provider": "<rootDir>/src/index.ts"
-      }
+      },
+    "setupFilesAfterEnv": ["./tests/setupTests.js"]
 
 }
