@@ -28,6 +28,7 @@ interface ReactTableProviderProps<D extends object> extends ReactTableOptions<D>
   includeFlexLayout?: boolean;
   includeAbsoluteLayout?: boolean;
   onStateChange?: (state: ReactTableState<D>) => void
+  stateChangeDebounce?: number,
   children: React.ReactNode;
 }
 
@@ -42,6 +43,7 @@ export const ReactTableProvider = <D extends object>({
     includeFlexLayout = false,
     includeAbsoluteLayout = false,
     onStateChange = () => {},
+    stateChangeDebounce = 0,
     children,
     ...options
 }: ReactTableProviderProps<D>) => {
@@ -75,7 +77,7 @@ export const ReactTableProvider = <D extends object>({
         includeResizeColumns && useResizeColumns
     );
 
-    const onStateChangeDebounced = useAsyncDebounce(onStateChange, 0)
+    const onStateChangeDebounced = useAsyncDebounce(onStateChange, stateChangeDebounce)
     React.useEffect(() => {
         //@ts-ignore
         onStateChangeDebounced(table.state);

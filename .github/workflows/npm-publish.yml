@@ -20,8 +20,6 @@ jobs:
           node-version: 16
       - run: npm ci
       - run: npm test
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
 
   publish-npm:
     needs: test
