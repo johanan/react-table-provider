@@ -5,9 +5,9 @@ export interface TestData {
     lastName: string,
     age: number
 }
-const createDataObject = (index: number) => ({ firstName: `First-${index}`, lastName: `Last-${index}`, age: index })
+const createDataObject = (first: string) => (index: number) => ({ firstName: `${first}-${index}`, lastName: `Last-${index}`, age: index })
 
-export const createTestData = (count: number) => [...Array(count).keys()].map(createDataObject);
+export const createTestData = (count: number, first = "First") => [...Array(count).keys()].map(createDataObject(first));
 export const columns : Column<TestData>[] = [
     {Header: 'First Name', accessor: 'firstName'},
     {Header: 'Last Name', accessor: 'lastName'},

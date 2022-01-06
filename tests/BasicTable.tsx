@@ -45,3 +45,25 @@ export const BasicTable = ()=> {
         </table>
       );
 };
+
+export const Pagination = () => {
+  const {
+    previousPage,
+    canPreviousPage,
+    nextPage,
+    canNextPage,
+    state: { pageIndex }
+  } = useReactTableContext();
+
+  return (
+    <div className="pagination">
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'Previous'}
+        </button>{' '}
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {'Next'}
+        </button>
+        <span>Page {pageIndex}</span>
+    </div>
+  )
+}
