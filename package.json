@@ -12,7 +12,7 @@
     "build:umd": "NODE_ENV=production rollup -c ",
     "build:es": "babel --extensions .ts,.tsx ./src --out-dir es",
     "build:types": "tsc --project ./tsconfig.types.json",
-    "test": "jest",
+    "test": "jest && REACTTABLE_ALIAS=react-table7 jest",
     "test:eslint": "eslint --ext .ts,.tsx ./src",
     "test:types": "tsc"
   },
@@ -64,6 +64,7 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.1",
     "react-table": "^7.7.0",
+    "react-table7": "npm:react-table@7.0.0",
     "regenerator-runtime": "^0.13.9",
     "rollup": "^2.62.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
@@ -75,7 +76,7 @@
     "@babel/runtime": "^7.16.7"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-table": "^7.7.0"
+    "react": "^16.8.3 || ^17.0.0-0",
+    "react-table": "^7.0.0"
   }
 }

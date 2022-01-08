@@ -77,11 +77,15 @@ export const ReactTableProvider = <D extends object>({
         includeResizeColumns && useResizeColumns
     );
 
-    const onStateChangeDebounced = useAsyncDebounce(onStateChange, stateChangeDebounce)
+    const onStateChangeDebounced = useAsyncDebounce(onStateChange, stateChangeDebounce);
+    // https://twitter.com/dan_abramov/status/1104432618798493698
+    // no sense in pulling in more dependencies when this is a small object
+    const stateString = JSON.stringify(table.state);
+
     React.useEffect(() => {
         //@ts-ignore
         onStateChangeDebounced(table.state);
-    }, [table.state, onStateChangeDebounced])
+    }, [stateString, onStateChangeDebounced])
 
     return (
     // @ts-ignore
