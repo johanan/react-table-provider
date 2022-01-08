@@ -21,7 +21,7 @@ import { ReactTableInstance, ReactTableOptions, ReactTableState } from "./types"
 
 const ReactTableContext = React.createContext<ReactTableInstance<object> | undefined>(undefined);
 
-interface ReactTableProviderProps<D extends object> extends ReactTableOptions<D>{
+export interface ReactTableProviderProps<D extends object> extends ReactTableOptions<D>{
   initialState?: Partial<ReactTableState<D>>;
   includeResizeColumns?: boolean;
   includeBlockLayout?: boolean;
