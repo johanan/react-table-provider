@@ -89,7 +89,7 @@ export const ReactTableProvider = <D extends object>({
 
     return (
     // @ts-ignore
-        <ReactTableContext.Provider value={{...table}}>
+        <ReactTableContext.Provider value={table}>
             {children}
         </ReactTableContext.Provider>
     );
