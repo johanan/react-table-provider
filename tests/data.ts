@@ -1,4 +1,4 @@
-import { Column } from "react-table";
+import { ColumnDef } from "@tanstack/react-table";
 
 export interface TestData {
     firstName: string,
@@ -8,8 +8,8 @@ export interface TestData {
 const createDataObject = (first: string) => (index: number) => ({ firstName: `${first}-${index}`, lastName: `Last-${index}`, age: index })
 
 export const createTestData = (count: number, first = "First") => [...Array(count).keys()].map(createDataObject(first));
-export const columns : Column<TestData>[] = [
-    {Header: 'First Name', accessor: 'firstName'},
-    {Header: 'Last Name', accessor: 'lastName'},
-    {Header: 'Age', accessor: 'age'},
+export const columns : ColumnDef<TestData>[] = [
+    {header: 'First Name', accessorKey: 'firstName'},
+    {header: 'Last Name', accessorKey: 'lastName'},
+    {header: 'Age', accessorKey: 'age'},
 ]
