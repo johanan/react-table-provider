@@ -4,6 +4,7 @@
 import React from "react";
 import { useReactTable, TableOptions, Table, RowData, InitialTableState, TableState, getCoreRowModel as defaultgetCoreRowModel, 
 getPaginationRowModel} from "@tanstack/react-table";
+import debounce from 'debounce';
 
 const ReactTableContext = (React.createContext<Table<RowData> | undefined>(undefined));
 
@@ -12,7 +13,7 @@ export interface ReactTableProviderProps<D> extends Omit<TableOptions<D>, "getCo
   includeBlockLayout?: boolean;
   includeFlexLayout?: boolean;
   includeAbsoluteLayout?: boolean;
-  //onStateChange?: (state: TableState) => void
+  onProviderChange?: (state: TableState) => void;
   stateChangeDebounce?: number,
   children: React.ReactNode;
   getCoreRowModel?: typeof defaultgetCoreRowModel
@@ -24,11 +25,8 @@ export const ReactTableProvider = <D extends RowData>({
     initialState = {},
     //stateReducer,
     //useControlledState,
-    includeResizeColumns = false,
-    includeBlockLayout = false,
-    includeFlexLayout = false,
-    includeAbsoluteLayout = false,
     stateChangeDebounce = 0,
+    onProviderChange,
     onStateChange,
     getCoreRowModel = defaultgetCoreRowModel,
     children,
@@ -44,44 +42,16 @@ export const ReactTableProvider = <D extends RowData>({
         getPaginationRowModel: getPaginationRowModel(),
         ...options
     });
-    /*const table = useTable<D>(
-        {
-            // @ts-ignore
-            columns,
-            data,
-            //@ts-ignore
-            initialState,
-            // @ts-ignore
-            stateReducer,
-            // @ts-ignore
-            useControlledState,
-            ...options
-        },
-        useColumnOrder,
-        useGlobalFilter,
-        useFilters,
-        useGroupBy,
-        useSortBy,
-        useExpanded,
-        usePagination,
-        useRowSelect,
-        useRowState,
-        //@ts-ignore
-        includeBlockLayout && useBlockLayout,
-        includeAbsoluteLayout && useAbsoluteLayout,
-        includeFlexLayout && useFlexLayout,
-        includeResizeColumns && useResizeColumns
-    );*/
 
-    //const onStateChangeDebounced = useAsyncDebounce(onStateChange, stateChangeDebounce);
+    const providerDebounced = onProviderChange ? debounce(onProviderChange, stateChangeDebounce) : onProviderChange;
     // https://twitter.com/dan_abramov/status/1104432618798493698
     // no sense in pulling in more dependencies when this is a small object
-    //const stateString = JSON.stringify(table.state);
+    const stateString = JSON.stringify(table.getState());
 
-    /*React.useEffect(() => {
+    React.useEffect(() => {
         //@ts-ignore
-        onStateChangeDebounced(table.state);
-    }, [stateString, onStateChangeDebounced])*/
+        providerDebounced?.(table.getState());
+    }, [stateString])
 
     return (
     // @ts-ignore
