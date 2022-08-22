@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from "react";
-import { useReactTable, TableOptions, Table, RowData, InitialTableState, TableState, getCoreRowModel as defaultgetCoreRowModel, 
+import { useReactTable, TableOptions, Table, RowData, TableState, getCoreRowModel as defaultgetCoreRowModel, 
 getPaginationRowModel} from "@tanstack/react-table";
 import debounce from 'debounce';
 
