@@ -1,4 +1,5 @@
 import React from 'react'
+import * as R from 'ramda';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom'
 import { createTestData, columns } from './data'
@@ -19,28 +20,28 @@ const initState = {pagination: { pageSize: 10, pageIndex: 0 }};
 const stateChangeCalls = jest.fn();
 
 const Controlled = () => {
-    const [data, setData] = React.useState([]);
+    const [state, setState] = React.useState(initState);
+    const [data, setData] = React.useState(dataHash['page0']);
     const [pageCount, setPageCount] = React.useState(1);
 
-    const providerChange = (state: TableState) => {
-        setData(dataHash[`page${state.pagination.pageIndex}`]);
+    const providerChange = (s: TableState) => {
+        setData(dataHash[`page${s.pagination.pageIndex}`]);
         //data changes as we step through it
-        setPageCount(state.pagination.pageIndex > 2 ? 5 : 4);
+        setPageCount(s.pagination.pageIndex > 2 ? 5 : 4);
         stateChangeCalls();
     };
+
+    const composedState = s => R.compose(setState, R.tap(providerChange), s)(state);
 
     return (
         <ReactTableProvider 
             data={data} 
             columns={columns}
-            //onStateChange={stateChange}
-            //state={initState}
-            onProviderChange={providerChange}
-            initialState={initState}
+            onStateChange={composedState}
+            state={state}
             manualPagination
             pageCount={pageCount}
             autoResetAll={false}
-            debugTable
         >
             <BasicTable />
             <Pagination />
@@ -62,22 +63,20 @@ describe('React Table Provider Basic', () => {
         //start clicking
         fireEvent.click(next);
         await waitFor(()=> screen.getByText(/Page 1/));
-        expect(screen.queryByText('page1-0')).toBeInTheDocument();
+        expect(screen.queryByText('page0-0')).toBeInTheDocument();
 
         fireEvent.click(next);
         await waitFor(()=> screen.getByText(/Page 2/));
-        expect(screen.queryByText('page2-0')).toBeInTheDocument();
+        expect(screen.queryByText('page1-0')).toBeInTheDocument();
 
         fireEvent.click(next);
         await waitFor(()=> screen.getByText(/Page 3/));
-        expect(screen.queryByText('page3-0')).toBeInTheDocument();
+        expect(screen.queryByText('page2-0')).toBeInTheDocument();
 
         fireEvent.click(next);
         await waitFor(()=> screen.getByText(/Page 4/));
-        expect(screen.queryByText('page4-0')).toBeInTheDocument();
+        expect(screen.queryByText('page3-0')).toBeInTheDocument();
         
-        //one init call and 4 page steps
-        // sometimes pageIndex 0 is called twice
-        expect(stateChangeCalls.mock.calls.length).toBeLessThanOrEqual(6);
+        expect(stateChangeCalls).toBeCalledTimes(4);
     })
 })

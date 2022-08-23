@@ -2,19 +2,20 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from "react";
-import { useReactTable, TableOptions, Table, RowData, TableState, getCoreRowModel as defaultgetCoreRowModel, 
-getPaginationRowModel} from "@tanstack/react-table";
-import debounce from 'debounce';
+import { useReactTable, TableOptions, Table, RowData, getCoreRowModel as defaultgetCoreRowModel, 
+getPaginationRowModel, getFilteredRowModel, getSortedRowModel, getGroupedRowModel, getExpandedRowModel} from "@tanstack/react-table";
 
 const ReactTableContext = (React.createContext<Table<RowData> | undefined>(undefined));
 
+export const allDefaultRowModels = {
+    getPaginationRowModel: getPaginationRowModel<any>(),
+    getFilteredRowModel: getFilteredRowModel<any>(),
+    getSortedRowModel: getSortedRowModel<any>(),
+    getGroupedRowModel: getGroupedRowModel<any>(),
+    getExpandedRowModel: getExpandedRowModel<any>()
+}
+
 export interface ReactTableProviderProps<D> extends Omit<TableOptions<D>, "getCoreRowModel">{
-  includeResizeColumns?: boolean;
-  includeBlockLayout?: boolean;
-  includeFlexLayout?: boolean;
-  includeAbsoluteLayout?: boolean;
-  onProviderChange?: (state: TableState) => void;
-  stateChangeDebounce?: number,
   children: React.ReactNode;
   getCoreRowModel?: typeof defaultgetCoreRowModel
 }
@@ -22,12 +23,7 @@ export interface ReactTableProviderProps<D> extends Omit<TableOptions<D>, "getCo
 export const ReactTableProvider = <D extends RowData>({
     columns,
     data,
-    initialState = {},
-    //stateReducer,
-    //useControlledState,
-    stateChangeDebounce = 0,
-    onProviderChange,
-    onStateChange,
+    initialState,
     getCoreRowModel = defaultgetCoreRowModel,
     children,
     ...options
@@ -37,21 +33,9 @@ export const ReactTableProvider = <D extends RowData>({
         columns,
         data,
         initialState,
-        onStateChange,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
         ...options
     });
-
-    const providerDebounced = onProviderChange ? debounce(onProviderChange, stateChangeDebounce) : onProviderChange;
-    // https://twitter.com/dan_abramov/status/1104432618798493698
-    // no sense in pulling in more dependencies when this is a small object
-    const stateString = JSON.stringify(table.getState());
-
-    React.useEffect(() => {
-        //@ts-ignore
-        providerDebounced?.(table.getState());
-    }, [stateString])
 
     return (
     // @ts-ignore

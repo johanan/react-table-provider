@@ -79,7 +79,7 @@ export const Pagination = () => {
         <button onClick={() => nextPage()} disabled={!getCanNextPage}>
           {'Next'}
         </button>
-        <span>Page {getState().pagination.pageIndex}</span>
+        <span>Page {getState().pagination.pageIndex + 1}</span>
     </div>
   )
 }
