@@ -1,31 +1,28 @@
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser'
-import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import visualizer from 'rollup-plugin-visualizer';
-import externalDeps from 'rollup-plugin-peer-deps-external'
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import typescript from '@rollup/plugin-typescript';
 
 const extensions = ['.js', '.ts', '.tsx']
 export default [
     {
         input: 'src/index.ts',
-        output: {
+        output: [{
             name: 'react-table-context',
             file: 'dist/react-table-context.js',
             format: 'umd',
             sourcemap: true,
-        },
+        }],
+        external: ['react'],
         plugins: [
+            peerDepsExternal(),
             resolve({
                 extensions
            }),
            commonjs(),
-           babel({
-            exclude: 'node_modules/**',
-            extensions,
-            babelHelpers: 'runtime'
-            }),
-            externalDeps(),
+           typescript({ tsconfig: './tsconfig.json' }),
             terser(),
             visualizer()
         ]
