@@ -2,8 +2,8 @@
   "name": "react-table-provider",
   "version": "1.0.0-semantic-release",
   "description": "Wrapper around React Table to allow component composition.",
-  "module": "es/index.js",
-  "main": "lib/index.js",
+  "module": "dist/react-table-context.js",
+  "main": "dist/react-table-context.js",
   "types": "types/index.d.ts",
   "unpkg": "dist/react-table-context.js",
   "scripts": {
@@ -18,8 +18,6 @@
   "license": "MIT",
   "files": [
     "dist",
-    "es",
-    "lib",
     "types",
     "src",
     "README.md",

@@ -26,6 +26,8 @@ export const ReactTableProvider = <D extends RowData>({
 
 };
 
+export const TanStackTableProvider = ReactTableProvider;
+
 export const useReactTableContext = () => {
     const context = React.useContext<Table<RowData> | undefined>(ReactTableContext);
     if (!context) {
@@ -33,3 +35,5 @@ export const useReactTableContext = () => {
     }
     return context;
 };
+
+export const useTanStackTableContext = useReactTableContext;

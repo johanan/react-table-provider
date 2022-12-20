@@ -4,13 +4,21 @@ A thin wrapper around [TanStack Table](https://tanstack.com/table/v8) that creat
 ![React Table Provider](https://github.com/johanan/react-table-provider/actions/workflows/npm-publish.yml/badge.svg)
 
 ## TanStack Table (aka React Table)
-React Table recently underwent a rewrite and has a new name: TanStack Table. There are breaking changes from the last version which lead to the updates in here.
+React Table recently underwent a rewrite and has a new name: **TanStack Table**. There are breaking changes from the last version which lead to the updates in here.
 
 There are two type of people that have tables in their React app. Those that use TanStack Table and those that haven't discovered TanStack Table yet.
 
 TanStack Table isn't only for tables. Any data that can be sorted, filtered, paged, arranged works perfectly in TanStack Table. A list of products with filters in the sidebar? **TanStack Table**.
 
 Building UIs with components that share state across one page is difficult with TanStack Table. Doing this requires a context that can hold and share the state across components.
+
+### React Table Rename
+This project initially started when TanStack Table was still known by React Table. Because of this the context and hook are available as both TanStack and React Table.
+There is no functional difference, in fact it is just a rename of the variable.
+```js
+export const TanStackTableProvider = ReactTableProvider;
+export const useTanStackTableContext = useReactTableContext;
+```
 
 ## Demo - Quickstart
 [Code Sandbox Demo](https://codesandbox.io/s/sad-proskuriakova-lhuvx)
@@ -44,6 +52,24 @@ All of them! Every feature api is included so that you have full functionality. 
         state={state}
         onStateChange={setState}
       />
+```
+
+This is quite literally this code:
+```jsx
+export const ReactTableProvider = <D extends RowData>({
+    children,
+    ...options
+}: ReactTableProviderProps<D>) => {
+
+    const table = useReactTable(options);
+
+    return (
+        <ReactTableContext.Provider value={table}>
+            {children}
+        </ReactTableContext.Provider>
+    );
+
+};
 ```
 
 ### What do I get back from the context?
