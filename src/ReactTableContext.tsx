@@ -2,40 +2,20 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from "react";
-import { useReactTable, TableOptions, Table, RowData, getCoreRowModel as defaultgetCoreRowModel, 
-getPaginationRowModel, getFilteredRowModel, getSortedRowModel, getGroupedRowModel, getExpandedRowModel} from "@tanstack/react-table";
+import { useReactTable, TableOptions, Table, RowData} from "@tanstack/react-table";
 
 const ReactTableContext = (React.createContext<Table<RowData> | undefined>(undefined));
 
-export const allDefaultRowModels = {
-    getPaginationRowModel: getPaginationRowModel<any>(),
-    getFilteredRowModel: getFilteredRowModel<any>(),
-    getSortedRowModel: getSortedRowModel<any>(),
-    getGroupedRowModel: getGroupedRowModel<any>(),
-    getExpandedRowModel: getExpandedRowModel<any>()
-}
-
-export interface ReactTableProviderProps<D> extends Omit<TableOptions<D>, "getCoreRowModel">{
+export interface ReactTableProviderProps<D> extends TableOptions<D>{
   children: React.ReactNode;
-  getCoreRowModel?: typeof defaultgetCoreRowModel
 }
 
 export const ReactTableProvider = <D extends RowData>({
-    columns,
-    data,
-    initialState,
-    getCoreRowModel = defaultgetCoreRowModel,
     children,
     ...options
 }: ReactTableProviderProps<D>) => {
 
-    const table = useReactTable({
-        columns,
-        data,
-        initialState,
-        getCoreRowModel: getCoreRowModel(),
-        ...options
-    });
+    const table = useReactTable(options);
 
     return (
     // @ts-ignore

@@ -1,6 +1,8 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, getCoreRowModel, 
+    getPaginationRowModel, getFilteredRowModel, getSortedRowModel, getGroupedRowModel, getExpandedRowModel,
+    getFacetedRowModel, getFacetedUniqueValues, getFacetedMinMaxValues} from "@tanstack/react-table";
 
-export interface TestData {
+export type TestData = {
     firstName: string,
     lastName: string,
     age: number
@@ -13,3 +15,16 @@ export const columns : ColumnDef<TestData>[] = [
     {header: 'Last Name', accessorKey: 'lastName'},
     {header: 'Age', accessorKey: 'age'},
 ]
+
+export const allDefaultRowModels = {
+    getPaginationRowModel: getPaginationRowModel<TestData>(),
+    getFilteredRowModel: getFilteredRowModel<TestData>(),
+    getSortedRowModel: getSortedRowModel<TestData>(),
+    getGroupedRowModel: getGroupedRowModel<TestData>(),
+    getExpandedRowModel: getExpandedRowModel<TestData>(),
+    getCoreRowModel: getCoreRowModel<TestData>(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    autoResetPageIndex: false
+  }

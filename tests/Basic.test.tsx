@@ -1,7 +1,7 @@
 import React from 'react'
 import {render, screen} from '@testing-library/react';
-import { createTestData, columns, TestData} from './data'
-import { allDefaultRowModels, ReactTableProvider } from '../src/index'
+import { createTestData, columns, allDefaultRowModels } from './data'
+import { ReactTableProvider } from '../src/index'
 import { BasicTable } from './BasicTable';
 
 const data = createTestData(10);

@@ -2,7 +2,7 @@ import React from 'react'
 import * as R from 'ramda';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom'
-import { createTestData, columns } from './data'
+import { createTestData, columns, allDefaultRowModels } from './data'
 import { ReactTableProvider } from '../src/index'
 import { BasicTable, Pagination } from './BasicTable';
 import { TableState } from '@tanstack/react-table';
@@ -31,7 +31,7 @@ const Controlled = () => {
         stateChangeCalls();
     };
 
-    const composedState = s => R.compose(setState, R.tap(providerChange), s)(state);
+    const composedState = s => setState(R.compose(R.tap(providerChange), s));
 
     return (
         <ReactTableProvider 
@@ -42,6 +42,7 @@ const Controlled = () => {
             manualPagination
             pageCount={pageCount}
             autoResetAll={false}
+            {...allDefaultRowModels}
         >
             <BasicTable />
             <Pagination />
