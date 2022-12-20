@@ -12,7 +12,7 @@ export default defineConfig({
         alias: {
           'react-table-provider': path.resolve(__dirname, '../../src/index.ts'),
           // test distribution files
-          //'react-table-provider': path.resolve(__dirname, '../../dist/react-table-context.js'),
+          //'react-table-provider': path.resolve(__dirname, '../react-table-provider/'),
         },
       },
 })
