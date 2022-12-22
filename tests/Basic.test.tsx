@@ -1,6 +1,6 @@
 import React from 'react'
 import {render, screen} from '@testing-library/react';
-import { createTestData, columns, TestData} from './data'
+import { createTestData, columns, allDefaultRowModels } from './data'
 import { ReactTableProvider } from '../src/index'
 import { BasicTable } from './BasicTable';
 
@@ -12,7 +12,7 @@ describe('React Table Provider Basic', () => {
     }),
 
     it('should render', () => {
-        render(<ReactTableProvider data={data} columns={columns} >
+        render(<ReactTableProvider data={data} columns={columns} {...allDefaultRowModels}>
             <BasicTable />
         </ReactTableProvider>)
 

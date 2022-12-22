@@ -1,20 +1,11 @@
 import React from 'react'
+import * as R from 'ramda';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom'
-import { createTestData, columns } from './data'
+import { createTestData, columns, allDefaultRowModels } from './data'
 import { ReactTableProvider } from '../src/index'
 import { BasicTable, Pagination } from './BasicTable';
-
-// we don't have auto reset for
-// global filter and filters
-const noReset = {
-    autoResetPage: false,
-    autoResetExpanded: false,
-    autoResetGroupBy: false,
-    autoResetSelectedRows: false,
-    autoResetSortBy: false,
-    autoResetRowState: false,
-}
+import { TableState } from '@tanstack/react-table';
 
 const dataHash = {
     page0: createTestData(10, "page0"),
@@ -24,34 +15,34 @@ const dataHash = {
     page4: createTestData(10, "page4"),
 }
 
-const initState = {pageSize: 10, pageIndex: 0};
+const initState = {pagination: { pageSize: 10, pageIndex: 0 }};
 
-const reducerCalls = jest.fn((ns) => (Object.assign({}, ns)));
 const stateChangeCalls = jest.fn();
 
 const Controlled = () => {
-    const [data, setData] = React.useState([]);
-    const [pageCount, setPageCount] = React.useState(4);
+    const [state, setState] = React.useState(initState);
+    const [data, setData] = React.useState(dataHash['page0']);
+    const [pageCount, setPageCount] = React.useState(1);
 
-    const stateReducer = React.useMemo(() => reducerCalls, [])
-
-    const stateChange = React.useMemo(() => (ns) => {
-        setData(dataHash[`page${ns.pageIndex}`]);
+    const providerChange = (s: TableState) => {
+        setData(dataHash[`page${s.pagination.pageIndex}`]);
         //data changes as we step through it
-        setPageCount(ns.pageIndex > 2 ? 5 : 4);
+        setPageCount(s.pagination.pageIndex > 2 ? 5 : 4);
         stateChangeCalls();
-    }, [setData, setPageCount]);
+    };
+
+    const composedState = s => setState(R.compose(R.tap(providerChange), s));
 
     return (
         <ReactTableProvider 
             data={data} 
             columns={columns}
-            stateReducer={stateReducer}
-            onStateChange={stateChange}
-            initialState={initState}
+            onStateChange={composedState}
+            state={state}
             manualPagination
             pageCount={pageCount}
-            {...noReset}
+            autoResetAll={false}
+            {...allDefaultRowModels}
         >
             <BasicTable />
             <Pagination />
@@ -73,25 +64,20 @@ describe('React Table Provider Basic', () => {
         //start clicking
         fireEvent.click(next);
         await waitFor(()=> screen.getByText(/Page 1/));
-        expect(screen.queryByText('page1-0')).toBeInTheDocument();
+        expect(screen.queryByText('page0-0')).toBeInTheDocument();
 
         fireEvent.click(next);
         await waitFor(()=> screen.getByText(/Page 2/));
-        expect(screen.queryByText('page2-0')).toBeInTheDocument();
+        expect(screen.queryByText('page1-0')).toBeInTheDocument();
 
         fireEvent.click(next);
         await waitFor(()=> screen.getByText(/Page 3/));
-        expect(screen.queryByText('page3-0')).toBeInTheDocument();
+        expect(screen.queryByText('page2-0')).toBeInTheDocument();
 
         fireEvent.click(next);
         await waitFor(()=> screen.getByText(/Page 4/));
-        expect(screen.queryByText('page4-0')).toBeInTheDocument();
+        expect(screen.queryByText('page3-0')).toBeInTheDocument();
         
-        //one init call and 4 page steps
-        // sometimes pageIndex 0 is called twice
-        expect(stateChangeCalls.mock.calls.length).toBeLessThanOrEqual(6);
-        //multiple calls per state as we are missing the auto reset for global filter and filters
-        //means 3x, once for state change, then 2x for the auto resets
-        expect(reducerCalls).toBeCalledTimes(15);
+        expect(stateChangeCalls).toBeCalledTimes(4);
     })
 })

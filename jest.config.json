@@ -6,6 +6,9 @@
     "modulePaths": [
         "<rootDir>/src/"
       ],
+      "transform": {
+        "^.+\\.(ts|js|tsx|jsx)$": "@swc/jest"
+      },
     "moduleNameMapper": {
         "react-table-provider": "<rootDir>/src/index.ts"
       },

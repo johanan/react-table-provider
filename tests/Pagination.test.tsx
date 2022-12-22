@@ -1,6 +1,6 @@
 import React from 'react'
 import {render, screen} from '@testing-library/react';
-import { createTestData, columns, TestData} from './data'
+import { createTestData, columns, allDefaultRowModels, TestData} from './data'
 import { ReactTableProvider } from '../src/index'
 import { BasicTable } from './BasicTable';
 
@@ -8,7 +8,7 @@ const data = createTestData(20);
 
 describe("React Table Provider Pagination", () => {
     it('should paginate by default', () => {
-        render(<ReactTableProvider data={data} columns={columns} initialState={{pageSize: 10, pageIndex: 0}}>
+        render(<ReactTableProvider data={data} columns={columns} initialState={{pagination: { pageSize: 10, pageIndex: 0 }}} {...allDefaultRowModels}>
             <BasicTable />
         </ReactTableProvider>)
 
@@ -18,7 +18,7 @@ describe("React Table Provider Pagination", () => {
     })
 
     it('should show all rows', () => {
-        render(<ReactTableProvider data={data} columns={columns} initialState={{pageSize: 20, pageIndex: 0}}>
+        render(<ReactTableProvider data={data} columns={columns} initialState={{pagination: { pageSize: 20, pageIndex: 0 }}} {...allDefaultRowModels}>
             <BasicTable />
         </ReactTableProvider>)
 

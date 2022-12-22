@@ -1,47 +1,63 @@
 import React from 'react';
 import { useReactTableContext } from '../src/index'
+import { flexRender } from '@tanstack/react-table';
 
 //copies straight from react-table examples 
 export const BasicTable = ()=> {
     const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        page,
-        prepareRow
+        getHeaderGroups,
+        getRowModel
       } = useReactTableContext();
     
       return (
-        <table {...getTableProps()}>
+        <table>
           <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column : any) => (
-                  // Add the sorting props to control sorting. For this example
-                  // we can add them into the header props
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Header")}
-                    {/* Add a sort direction indicator */}
-                    <span>
-                      {column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}
-                    </span>
-                  </th>
+            {getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <div
+                          {...{
+                            className: header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : '',
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: ' 🔼',
+                            desc: ' 🔽',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      )}
+                    </th>
                 ))}
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
+          <tbody>
+          {getRowModel().rows.map(row => {
+            return (
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell => {
+                  return (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
         </table>
       );
 };
@@ -49,21 +65,21 @@ export const BasicTable = ()=> {
 export const Pagination = () => {
   const {
     previousPage,
-    canPreviousPage,
+    getCanPreviousPage,
     nextPage,
-    canNextPage,
-    state: { pageIndex }
+    getCanNextPage,
+    getState
   } = useReactTableContext();
 
   return (
     <div className="pagination">
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+        <button onClick={() => previousPage()} disabled={!getCanPreviousPage}>
           {'Previous'}
         </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
+        <button onClick={() => nextPage()} disabled={!getCanNextPage}>
           {'Next'}
         </button>
-        <span>Page {pageIndex}</span>
+        <span>Page {getState().pagination.pageIndex + 1}</span>
     </div>
   )
 }

@@ -1,0 +1,24 @@
+{
+    "name": "table-provider-basic",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview",
+        "start": "vite"
+    },
+    "dependencies": {
+        "@faker-js/faker": "^7.6.0",
+        "@tanstack/react-table": "8.7.4",
+        "@tanstack/react-table-devtools": "^8.7.2",
+        "ramda": "^0.28.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-table-provider": "2.1.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "^3.0.0",
+        "vite": "^4.0.2"
+    }
+}
